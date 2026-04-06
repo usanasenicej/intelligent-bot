@@ -32,27 +32,25 @@ func (a *Agent) Run(ctx context.Context, input string) (string, error) {
 	a.memory.Add(ai.Message{Role: ai.RoleUser, Content: input})
 
 	for i := 0; i < a.maxRetries; i++ {
+		a.logger.Log(fmt.Sprintf("Memory Size: %d messages", a.memory.Size()))
 		messages := a.memory.Get()
 		resp, err := a.provider.Generate(ctx, messages)
 		if err != nil {
+			a.logger.Errorf("Provider generation failed: %v", err)
 			return "", err
 		}
 
-		// Simplified: The provider's response could include a tool call.
-		// For this complex mock, we'll imagine it's an intelligent loop.
-		// The agent decides when it has a final answer.
-		
-		fmt.Printf("[Agent Thought]: %s\n", resp.Message.Content)
+		a.logger.Log(fmt.Sprintf("Agent Thought: %s", resp.Message.Content))
 		a.memory.Add(resp.Message)
 
-		// Check if we reached a final conclusion.
-		// In a real scenario, the LLM would signal this via a specific output format.
+		// In a real agent, we would parse 'resp.Message' for tool calls.
+		// For this complex mock, we assume 'isFinalAnswer' handles termination.
 		if isFinalAnswer(resp.Message.Content) {
 			return resp.Message.Content, nil
 		}
 	}
 
-	return "", fmt.Errorf("exceeded max retries")
+	return "", fmt.Errorf("exceeded max retries of %d", a.maxRetries)
 }
 
 func isFinalAnswer(content string) bool {
