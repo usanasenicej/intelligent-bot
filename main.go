@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/user/go-ai-agent/internal/agent"
 	"github.com/user/go-ai-agent/internal/memory"
+	"github.com/user/go-ai-agent/internal/tools"
 	"github.com/user/go-ai-agent/pkg/ai"
 )
 
@@ -30,11 +31,12 @@ func main() {
 	mem := memory.NewHistoryMemory()
 	
 	bot := agent.NewAgent(provider, mem)
-	
-	fmt.Println("AI Bot is running...")
-	response, err := bot.Run(ctx, "Calculate 1 + 1")
+	bot.RegisterTool(&tools.Calculator{})
+
+	fmt.Println("AI Bot initialized with tools...")
+	response, err := bot.Run(ctx, "Calculate the square of 12")
 	if err != nil {
-		fmt.Printf("Error: %v\n", err)
+		fmt.Printf("Fatal Agent Error: %v\n", err)
 		return
 	}
 	
