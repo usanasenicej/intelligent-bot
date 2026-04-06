@@ -23,3 +23,7 @@ func (h *HistoryMemory) Clear() {
 func (h *HistoryMemory) Get() []ai.Message {
 	return h.messages
 }
+
+func (h *HistoryMemory) Size() int {
+	return len(h.messages)
+}

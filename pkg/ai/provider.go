@@ -13,4 +13,5 @@ type Memory interface {
 	Add(message Message)
 	Clear()
 	Get() []Message
+	Size() int
 }
