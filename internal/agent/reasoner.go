@@ -7,18 +7,20 @@ import (
 )
 
 type Agent struct {
-	provider ai.Provider
-	memory   ai.Memory
-	tools    map[string]ai.Tool
+	provider   ai.Provider
+	memory     ai.Memory
+	tools      map[string]ai.Tool
 	maxRetries int
+	logger     ai.Logger
 }
 
 func NewAgent(p ai.Provider, m ai.Memory) *Agent {
 	return &Agent{
-		provider: p,
-		memory:   m,
-		tools:    make(map[string]ai.Tool),
+		provider:   p,
+		memory:     m,
+		tools:      make(map[string]ai.Tool),
 		maxRetries: 5,
+		logger:     ai.DefaultLogger{},
 	}
 }
 
